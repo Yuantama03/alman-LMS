@@ -1,0 +1,244 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="Use Case SIAK" id="use-case-siak">
+    <mxGraphModel dx="1603" dy="823" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="system-boundary" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;verticalAlign=top;align=center;spacingTop=15;fontSize=18;fontStyle=1;strokeWidth=2;" value="SIAK (Sistem Informasi Akademik)" vertex="1">
+          <mxGeometry height="800" width="1030" x="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" value="Admin" vertex="1">
+          <mxGeometry height="100" width="50" x="100" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-guru" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" value="Guru" vertex="1">
+          <mxGeometry height="100" width="50" x="1250" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-siswa" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" value="Siswa" vertex="1">
+          <mxGeometry height="100" width="50" x="100" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-login" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" value="Login" vertex="1">
+          <mxGeometry height="60" width="120" x="640" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-profile" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Kelola Profile" vertex="1">
+          <mxGeometry height="60" width="120" x="510" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-change-password" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Ubah Password" vertex="1">
+          <mxGeometry height="60" width="120" x="770" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-dashboard" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Dashboard Admin" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-guru" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Data Guru" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-siswa" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Data Siswa" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-kelas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Kelas" vertex="1">
+          <mxGeometry height="60" width="140" x="840" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-mapel" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Mata Pelajaran" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-jadwal" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Jadwal" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-semester" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Semester" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-silabus" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Silabus" vertex="1">
+          <mxGeometry height="60" width="140" x="840" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-user" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola User" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-pengumuman" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Pengumuman" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-pengaturan" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Kelola Pengaturan" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-presensi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Lihat Presensi" vertex="1">
+          <mxGeometry height="60" width="140" x="840" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-poin" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Lihat Poin Siswa" vertex="1">
+          <mxGeometry height="60" width="140" x="390" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-tugas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Lihat Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="570" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-guru-dashboard" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Dashboard Guru" vertex="1">
+          <mxGeometry height="60" width="140" x="1000" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-materi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Kelola Materi" vertex="1">
+          <mxGeometry height="60" width="140" x="1000" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kelola-tugas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Kelola Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="1000" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-guru-nilai" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Input Nilai Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="1000" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-guru-presensi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Kelola Presensi" vertex="1">
+          <mxGeometry height="60" width="140" x="840" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-guru-poin" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Kelola Poin Siswa" vertex="1">
+          <mxGeometry height="60" width="140" x="1000" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-guru-kalender" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Lihat Kalender Akademik" vertex="1">
+          <mxGeometry height="60" width="140" x="750" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-download-jawaban" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Download Jawaban" vertex="1">
+          <mxGeometry height="60" width="140" x="920" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-siswa-dashboard" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Dashboard Siswa" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-lihat-materi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Lihat Materi" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-download-materi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Download Materi" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-lihat-tugas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Lihat Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-download-tugas" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Download Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-kirim-jawaban" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Kirim Jawaban Tugas" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-siswa-presensi" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Lihat Presensi" vertex="1">
+          <mxGeometry height="60" width="140" x="300" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-siswa-poin" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Lihat Poin" vertex="1">
+          <mxGeometry height="60" width="140" x="480" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-siswa-kalender" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="Lihat Kalender Akademik" vertex="1">
+          <mxGeometry height="60" width="140" x="660" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-login" edge="1" parent="1" source="actor-admin" target="uc-login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-profile" edge="1" parent="1" source="actor-admin" target="uc-profile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-password" edge="1" parent="1" source="actor-admin" target="uc-change-password">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-dashboard" edge="1" parent="1" source="actor-admin" target="uc-admin-dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-guru" edge="1" parent="1" source="actor-admin" target="uc-kelola-guru">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-siswa" edge="1" parent="1" source="actor-admin" target="uc-kelola-siswa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-kelas" edge="1" parent="1" source="actor-admin" target="uc-kelola-kelas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-mapel" edge="1" parent="1" source="actor-admin" target="uc-kelola-mapel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-jadwal" edge="1" parent="1" source="actor-admin" target="uc-kelola-jadwal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-semester" edge="1" parent="1" source="actor-admin" target="uc-kelola-semester">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-silabus" edge="1" parent="1" source="actor-admin" target="uc-kelola-silabus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-user" edge="1" parent="1" source="actor-admin" target="uc-kelola-user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-pengumuman" edge="1" parent="1" source="actor-admin" target="uc-kelola-pengumuman">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-pengaturan" edge="1" parent="1" source="actor-admin" target="uc-kelola-pengaturan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-presensi" edge="1" parent="1" source="actor-admin" target="uc-admin-presensi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-poin" edge="1" parent="1" source="actor-admin" target="uc-admin-poin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-admin-tugas" edge="1" parent="1" source="actor-admin" target="uc-admin-tugas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-login" edge="1" parent="1" source="actor-guru" target="uc-login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-profile" edge="1" parent="1" source="actor-guru" target="uc-profile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-password" edge="1" parent="1" source="actor-guru" target="uc-change-password">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-dashboard" edge="1" parent="1" source="actor-guru" target="uc-guru-dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-materi" edge="1" parent="1" source="actor-guru" target="uc-kelola-materi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-tugas" edge="1" parent="1" source="actor-guru" target="uc-kelola-tugas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-nilai" edge="1" parent="1" source="actor-guru" target="uc-guru-nilai">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-presensi" edge="1" parent="1" source="actor-guru" target="uc-guru-presensi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-poin" edge="1" parent="1" source="actor-guru" target="uc-guru-poin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-kalender" edge="1" parent="1" source="actor-guru" target="uc-guru-kalender">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-guru-download-jawaban" edge="1" parent="1" source="actor-guru" target="uc-download-jawaban">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-login" edge="1" parent="1" source="actor-siswa" target="uc-login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-profile" edge="1" parent="1" source="actor-siswa" target="uc-profile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-password" edge="1" parent="1" source="actor-siswa" target="uc-change-password">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-dashboard" edge="1" parent="1" source="actor-siswa" target="uc-siswa-dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-lihat-materi" edge="1" parent="1" source="actor-siswa" target="uc-lihat-materi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-download-materi" edge="1" parent="1" source="actor-siswa" target="uc-download-materi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-lihat-tugas" edge="1" parent="1" source="actor-siswa" target="uc-lihat-tugas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-download-tugas" edge="1" parent="1" source="actor-siswa" target="uc-download-tugas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-kirim-jawaban" edge="1" parent="1" source="actor-siswa" target="uc-kirim-jawaban">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-presensi" edge="1" parent="1" source="actor-siswa" target="uc-siswa-presensi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-poin" edge="1" parent="1" source="actor-siswa" target="uc-siswa-poin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-siswa-kalender" edge="1" parent="1" source="actor-siswa" target="uc-siswa-kalender">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
