@@ -38,6 +38,80 @@
                         <p>{{ $siswa->alamat }}</p>
                     </div>
                 </div>
+                {{-- Indikator Poin --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <h5 class="mb-0">{{ $statusPoin['icon'] }} Status Poin Kamu</h5>
+                                <small class="text-muted">Total Poin: <strong>{{ $totalPoin }}</strong></small>
+                            </div>
+                            <span class="badge badge-{{ $statusPoin['color'] }}" style="font-size:14px;padding:6px 14px;">
+                                {{ $statusPoin['label'] }}
+                            </span>
+                        </div>
+                        <div class="progress" style="height:10px;">
+                            <div class="progress-bar bg-{{ $statusPoin['color'] }}"
+                                 role="progressbar" style="width: {{ $persenPoin }}%;"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">0</small>
+                            <small class="text-muted">{{ $thresholdPoin->cukup }}</small>
+                            <small class="text-muted">{{ $thresholdPoin->baik }}</small>
+                            <small class="text-muted">{{ $thresholdPoin->sangat_baik }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+
+            {{-- Rekomendasi Belajar --}}
+            <div class="col-12 col-sm-12 col-lg-7">
+                <div class="card" style="height:100%;">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon bg-warning text-white mr-2"
+                                 style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">Rekomendasi Belajar</h4>
+                                <small class="text-muted">Mapel yang perlu lebih diperhatikan (di bawah KKM 75)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="max-height:280px;overflow-y:auto;">
+                        @if($rekomendasiMapel->isNotEmpty())
+                            @foreach($rekomendasiMapel as $rekom)
+                            <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded"
+                                 style="background:#f8f9fa;border-left:4px solid #dc3545;">
+                                <div>
+                                    <h6 class="mb-1">{{ $rekom['nama_mapel'] }}</h6>
+                                    <small class="text-muted">
+                                        Rata-rata:
+                                        <span class="badge badge-danger">{{ $rekom['rata_rata'] }}</span>
+                                        · dari {{ $rekom['jumlah_nilai'] }} tugas
+                                    </small>
+                                </div>
+                                @if($rekom['video_section_id'])
+                                <a href="{{ route('siswa.video.index') }}#section-{{ $rekom['video_section_id'] }}"
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-play-circle"></i> Tonton
+                                </a>
+                                @endif
+                            </div>
+                            @endforeach
+                        @else
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <p class="mb-0">Mantap! Semua nilai kamu sudah di atas KKM 🎉</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -104,7 +178,6 @@
                                 @endforeach
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -191,6 +264,8 @@
             </div>
 
         </div>
+       
+
     </div>
 </section>
 @endsection

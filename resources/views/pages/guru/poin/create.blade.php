@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4>Tambah Poin Siswa - Kelas {{ $kelas->nama_kelas }}</h4>
+                            <h4>Tambah Poin Siswa - Kelas {{ $kelas->pluck('nama_kelas')->join(', ') }}</h4>
                             <a href="{{ route('guru.poin.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Kembali
                             </a>

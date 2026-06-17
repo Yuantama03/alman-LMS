@@ -34,7 +34,11 @@
 
             <li class="{{ request()->routeIs('admin.poin.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.poin.index') }}"><i class="fas fa-star"></i> <span>Poin Siswa</span></a></li>
 
+            <li class="{{ request()->routeIs('admin.threshold.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.threshold.index') }}"><i class="fas fa-sliders-h"></i> <span>Threshold Poin</span></a></li>
+
             <li class="{{ request()->routeIs('admin.kalender.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.kalender.index') }}"><i class="fas fa-calendar-day"></i> <span>Kalender Akademik</span></a></li>
+
+            <li class="{{ request()->routeIs('admin.threshold.siswa.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('admin.threshold.siswa.index') }}"><i class="fas fa-user-cog"></i> <span>Threshold Per Siswa</span></a></li>
 
             <li class="{{ request()->routeIs('user.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.index') }}"><i class="fas fa-user"></i> <span>User</span></a></li>
 
@@ -43,20 +47,26 @@
             <li class="{{ request()->routeIs('pengaturan.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengaturan.index') }}"><i class="fas fa-cog"></i> <span>Pengaturan</span></a></li>
 
             @elseif (Auth::check() && Auth::user()->roles == 'guru')
+
             <li class="{{ request()->routeIs('guru.dashboard.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.dashboard') }}"><i class="fas fa-columns"></i> <span>Dashboard</span></a></li>
             <li class="menu-header">Master Data</li>
             <li class="{{ request()->routeIs('materi.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('materi.index') }}"><i class="fas fa-book"></i> <span>Materi</span></a></li>
             <li class="{{ request()->routeIs('tugas.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('tugas.index') }}"><i class="fas fa-list"></i> <span>Tugas</span></a></li>
             <li class="{{ request()->routeIs('guru.presensi.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.presensi.index') }}"><i class="fas fa-user-check"></i> <span>Presensi</span></a></li>
+            <li class="{{ request()->routeIs('guru.video.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.video.index') }}"><i class="fas fa-video"></i> <span>Video Pembelajaran</span></a></li>
             <li class="{{ request()->routeIs('guru.poin.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.poin.index') }}"><i class="fas fa-star"></i> <span>Poin Siswa</span></a></li>
+            <li class="{{ request()->routeIs('chat.group.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('chat.group.index') }}"><i class="fas fa-comments"></i> <span>Chat Kelompok</span></a></li>
             <li class="{{ request()->routeIs('guru.kalender.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.kalender.index') }}"><i class="fas fa-calendar-day"></i> <span>Kalender Akademik</span></a></li>
+            <li class="{{ request()->routeIs('guru.threshold.siswa.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('guru.threshold.siswa.index') }}"><i class="fas fa-user-cog"></i> <span>Threshold Per Siswa</span></a></li>
 
             @elseif (Auth::check() && Auth::user()->roles == 'siswa')
             <li class="{{ request()->routeIs('siswa.dashboard.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.dashboard') }}"><i class="fas fa-columns"></i> <span>Dashboard</span></a></li>
             <li class="{{ request()->routeIs('materi.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.materi') }}"><i class="fas fa-book"></i> <span>Materi</span></a></li>
             <li class="{{ request()->routeIs('tugas.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.tugas') }}"><i class="fas fa-list"></i> <span>Tugas</span></a></li>
+            <li class="{{ request()->routeIs('siswa.video.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.video.index') }}"><i class="fas fa-video"></i> <span>Video Pembelajaran</span></a></li>
             <li class="{{ request()->routeIs('siswa.presensi.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.presensi.index') }}"><i class="fas fa-user-check"></i> <span>Presensi</span></a></li>
             <li class="{{ request()->routeIs('siswa.poin.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.poin.index') }}"><i class="fas fa-star"></i> <span>Poin Saya</span></a></li>
+            <li class="{{ request()->routeIs('chat.group.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('chat.group.index') }}"><i class="fas fa-comments"></i> <span>Chat Kelompok</span></a></li>
             <li class="{{ request()->routeIs('siswa.kalender.*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.kalender.index') }}"><i class="fas fa-calendar-day"></i> <span>Kalender Akademik</span></a></li>
 
             @else

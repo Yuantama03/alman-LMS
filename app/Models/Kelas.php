@@ -15,4 +15,9 @@ class Kelas extends Model
     {
         return $this->belongsTo(Guru::class, 'guru_id');
     }
+
+    public function thresholdPoin()
+    {
+        return $this->hasOne(ThresholdPoin::class);
+    }
 }

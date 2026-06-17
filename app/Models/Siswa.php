@@ -30,4 +30,9 @@ class Siswa extends Model
     {
         return $this->hasMany(PoinSiswa::class, 'siswa_id');
     }
+
+    public function thresholdPoin()
+{
+    return $this->hasOne(ThresholdPoinSiswa::class);
+}
 }

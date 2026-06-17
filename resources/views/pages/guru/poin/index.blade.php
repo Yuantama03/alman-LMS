@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4>Poin Kelas {{ $kelas->nama_kelas }}</h4>
+                           <h4>Poin Siswa — {{ $kelas->pluck('nama_kelas')->join(', ') }}</h4>
                             <a href="{{ route('guru.poin.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus"></i> Tambah Poin
                             </a>
@@ -82,6 +82,7 @@
                                             <th>Deskripsi</th>
                                             <th>Poin</th>
                                             <th>Oleh</th>
+<th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -107,6 +108,16 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->creator->name }}</td>
+<td>
+    <form method="POST" action="{{ route('guru.poin.destroy', $item->id) }}">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm"
+                onclick="return confirm('Hapus data poin ini?')">
+            <i class="fas fa-trash"></i> Hapus
+        </button>
+    </form>
+</td>
                                             </tr>
                                         @empty
                                             <tr>

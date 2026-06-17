@@ -162,6 +162,53 @@
                     </div>
                 </div>
             </div>
+            {{-- Rule-Based: Status Poin Per Siswa --}}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Status Poin Siswa (Rule-Based)</h4>
+                <a href="{{ route('admin.threshold.index') }}" class="btn btn-sm btn-warning">
+                    <i class="fas fa-cog"></i> Atur Threshold
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th class="text-center">Total Poin</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($statusSiswa as $siswaId => $data)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $data['nama'] }}</td>
+                                <td>{{ $data['kelas'] }}</td>
+                                <td class="text-center"><strong>{{ $data['total_poin'] }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge badge-{{ $data['status']['color'] }}" style="font-size:13px;padding:5px 10px;">
+                                        {{ $data['status']['icon'] }} {{ $data['status']['label'] }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center">Tidak ada data siswa</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </section>
 @endsection

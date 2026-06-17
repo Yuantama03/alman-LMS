@@ -5,104 +5,128 @@ namespace App\Http\Controllers;
 use App\Models\PoinSiswa;
 use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\ThresholdPoin;
+use App\Models\ThresholdPoinSiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PoinSiswaController extends Controller
 {
-    // Admin Methods
+    // ==================== ADMIN ====================
+
     public function adminIndex(Request $request)
     {
         $query = PoinSiswa::with(['siswa.kelas', 'creator']);
-        
+
         // Filter by kelas
         if ($request->kelas_id) {
-            $query->whereHas('siswa', function($q) use ($request) {
+            $query->whereHas('siswa', function ($q) use ($request) {
                 $q->where('kelas_id', $request->kelas_id);
             });
         }
-        
+
         // Filter by jenis
         if ($request->jenis) {
             $query->where('jenis', $request->jenis);
         }
-        
-        // Filter by date range
-        if ($request->tanggal_dari) {
-            $query->where('tanggal', '>=', $request->tanggal_dari);
-        }
-        if ($request->tanggal_sampai) {
-            $query->where('tanggal', '<=', $request->tanggal_sampai);
-        }
-        
-        $poin = $query->orderBy('tanggal', 'desc')->get();
+
+        $poin  = $query->orderBy('tanggal', 'desc')->get();
         $kelas = Kelas::all();
-        
+
         // Statistics
-        $totalPrestasi = PoinSiswa::where('jenis', 'Prestasi')->sum('poin');
+        $totalPrestasi    = PoinSiswa::where('jenis', 'Prestasi')->sum('poin');
         $totalPelanggaran = PoinSiswa::where('jenis', 'Pelanggaran')->sum('poin');
-        
-        return view('pages.admin.poin.index', compact('poin', 'kelas', 'totalPrestasi', 'totalPelanggaran'));
+
+        // Rule-based: hitung status per siswa
+        $siswaList   = Siswa::with('kelas')->get();
+        $statusSiswa = [];
+        foreach ($siswaList as $s) {
+            $totalPoin = PoinSiswa::where('siswa_id', $s->id)->sum('poin');
+            $threshold = ThresholdPoin::where('kelas_id', $s->kelas_id)->first()
+                         ?? ThresholdPoin::getDefault();
+            $statusSiswa[$s->id] = [
+                'nama'       => $s->nama,
+                'kelas'      => $s->kelas->nama_kelas ?? '-',
+                'total_poin' => $totalPoin,
+                'status'     => $threshold->getStatus($totalPoin),
+            ];
+        }
+
+        return view('pages.admin.poin.index', compact(
+            'poin', 'kelas', 'totalPrestasi', 'totalPelanggaran', 'statusSiswa'
+        ));
     }
 
     public function adminCreate()
     {
-        $siswa = Siswa::with('kelas')->orderBy('nama', 'asc')->get();
+        $siswa = Siswa::with('kelas')->get();
         return view('pages.admin.poin.create', compact('siswa'));
     }
 
     public function adminStore(Request $request)
     {
-        $validated = $request->validate([
-            'siswa_id' => 'required|exists:siswas,id',
-            'jenis' => 'required|in:Prestasi,Pelanggaran',
-            'kategori' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'poin' => 'required|integer|min:1',
-            'tanggal' => 'required|date',
+        $request->validate([
+            'siswa_id'  => 'required|exists:siswas,id',
+            'jenis'     => 'required|in:Prestasi,Pelanggaran',
+            'kategori'  => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'poin'      => 'required|integer',
+            'tanggal'   => 'required|date',
         ]);
 
-        // Set poin negatif untuk pelanggaran
-        if ($validated['jenis'] == 'Pelanggaran') {
-            $validated['poin'] = -abs($validated['poin']);
-        }
-
-        $validated['created_by'] = Auth::id();
-
-        PoinSiswa::create($validated);
+            PoinSiswa::create([
+    'siswa_id'   => $request->siswa_id,
+    'jenis'      => $request->jenis,
+    'kategori'   => $request->kategori,
+    'deskripsi'  => $request->deskripsi,
+    'poin'       => $request->jenis === 'Pelanggaran' ? -abs($request->poin) : abs($request->poin),
+    'tanggal'    => $request->tanggal,
+    'created_by' => Auth::id(),
+]);
 
         return redirect()->route('admin.poin.index')
-            ->with('success', 'Poin siswa berhasil ditambahkan');
+            ->with('success', 'Data poin berhasil ditambahkan');
     }
+
+    public function guruDestroy($id)
+{
+    $poin = PoinSiswa::findOrFail($id);
+    $poin->delete();
+
+    return redirect()->route('guru.poin.index')
+        ->with('success', 'Data poin berhasil dihapus');
+}
 
     public function adminEdit($id)
     {
-        $poin = PoinSiswa::findOrFail($id);
-        $siswa = Siswa::with('kelas')->orderBy('nama', 'asc')->get();
+        $poin  = PoinSiswa::findOrFail($id);
+        $siswa = Siswa::with('kelas')->get();
         return view('pages.admin.poin.edit', compact('poin', 'siswa'));
     }
 
     public function adminUpdate(Request $request, $id)
     {
-        $validated = $request->validate([
-            'siswa_id' => 'required|exists:siswas,id',
-            'jenis' => 'required|in:Prestasi,Pelanggaran',
-            'kategori' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'poin' => 'required|integer|min:1',
-            'tanggal' => 'required|date',
+        $request->validate([
+            'siswa_id'  => 'required|exists:siswas,id',
+            'jenis'     => 'required|in:Prestasi,Pelanggaran',
+            'kategori'  => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'poin'      => 'required|integer',
+            'tanggal'   => 'required|date',
         ]);
 
-        // Set poin negatif untuk pelanggaran
-        if ($validated['jenis'] == 'Pelanggaran') {
-            $validated['poin'] = -abs($validated['poin']);
-        }
-
         $poin = PoinSiswa::findOrFail($id);
-        $poin->update($validated);
+        $poin->update([
+            'siswa_id'  => $request->siswa_id,
+            'jenis'     => $request->jenis,
+            'kategori'  => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'poin'      => $request->poin,
+            'tanggal'   => $request->tanggal,
+        ]);
 
         return redirect()->route('admin.poin.index')
-            ->with('success', 'Poin siswa berhasil diperbarui');
+            ->with('success', 'Data poin berhasil diperbarui');
     }
 
     public function adminDestroy($id)
@@ -111,113 +135,130 @@ class PoinSiswaController extends Controller
         $poin->delete();
 
         return redirect()->route('admin.poin.index')
-            ->with('success', 'Poin siswa berhasil dihapus');
+            ->with('success', 'Data poin berhasil dihapus');
     }
 
-    // Guru Methods
+    // ==================== GURU ====================
+
     public function guruIndex(Request $request)
     {
-        $guru = Auth::user()->guru;
-        $kelas = $guru->kelas;
-        
-        $query = PoinSiswa::with(['siswa', 'creator'])
-            ->whereHas('siswa', function($q) use ($kelas) {
-                $q->where('kelas_id', $kelas->id);
+        $guru  = Auth::user()->guru;
+        $kelas = Kelas::where('guru_id', $guru->id)->get();
+
+        $query = PoinSiswa::with(['siswa.kelas', 'creator'])
+            ->whereHas('siswa', function ($q) use ($kelas) {
+                $q->whereIn('kelas_id', $kelas->pluck('id'));
             });
-        
-        // Filter by jenis
+
+        if ($request->kelas_id) {
+            $query->whereHas('siswa', function ($q) use ($request) {
+                $q->where('kelas_id', $request->kelas_id);
+            });
+        }
+
         if ($request->jenis) {
             $query->where('jenis', $request->jenis);
         }
-        
-        $poin = $query->orderBy('tanggal', 'desc')->get();
-        
-        // Statistics for this class
-        $totalPrestasi = PoinSiswa::whereHas('siswa', function($q) use ($kelas) {
-            $q->where('kelas_id', $kelas->id);
-        })->where('jenis', 'Prestasi')->sum('poin');
-        
-        $totalPelanggaran = PoinSiswa::whereHas('siswa', function($q) use ($kelas) {
-            $q->where('kelas_id', $kelas->id);
-        })->where('jenis', 'Pelanggaran')->sum('poin');
-        
-        return view('pages.guru.poin.index', compact('poin', 'kelas', 'totalPrestasi', 'totalPelanggaran'));
+
+        $poin             = $query->orderBy('tanggal', 'desc')->get();
+        $totalPrestasi    = $poin->where('jenis', 'Prestasi')->sum('poin');
+        $totalPelanggaran = $poin->where('jenis', 'Pelanggaran')->sum('poin');
+
+        return view('pages.guru.poin.index', compact(
+            'poin', 'kelas', 'totalPrestasi', 'totalPelanggaran'
+        ));
     }
 
     public function guruCreate()
     {
-        $guru = Auth::user()->guru;
-        $kelas = $guru->kelas;
-        $siswa = Siswa::where('kelas_id', $kelas->id)->orderBy('nama', 'asc')->get();
-        
+        $guru  = Auth::user()->guru;
+        $kelas = Kelas::where('guru_id', $guru->id)->get();
+        $siswa = Siswa::whereIn('kelas_id', $kelas->pluck('id'))->with('kelas')->get();
         return view('pages.guru.poin.create', compact('siswa', 'kelas'));
     }
 
     public function guruStore(Request $request)
     {
-        $validated = $request->validate([
-            'siswa_id' => 'required|exists:siswas,id',
-            'jenis' => 'required|in:Prestasi,Pelanggaran',
-            'kategori' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'poin' => 'required|integer|min:1',
-            'tanggal' => 'required|date',
+        $request->validate([
+            'siswa_id'  => 'required|exists:siswas,id',
+            'jenis'     => 'required|in:Prestasi,Pelanggaran',
+            'kategori'  => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'poin'      => 'required|integer',
+            'tanggal'   => 'required|date',
         ]);
 
-        // Set poin negatif untuk pelanggaran
-        if ($validated['jenis'] == 'Pelanggaran') {
-            $validated['poin'] = -abs($validated['poin']);
-        }
-
-        $validated['created_by'] = Auth::id();
-
-        PoinSiswa::create($validated);
+       PoinSiswa::create([
+    'siswa_id'   => $request->siswa_id,
+    'jenis'      => $request->jenis,
+    'kategori'   => $request->kategori,
+    'deskripsi'  => $request->deskripsi,
+    'poin'       => $request->jenis === 'Pelanggaran' ? -abs($request->poin) : abs($request->poin),
+    'tanggal'    => $request->tanggal,
+    'created_by' => Auth::id(),
+]);
 
         return redirect()->route('guru.poin.index')
-            ->with('success', 'Poin siswa berhasil ditambahkan');
+            ->with('success', 'Data poin berhasil ditambahkan');
     }
 
-    // Siswa Methods
+    // ==================== SISWA ====================
+
     public function siswaIndex()
-    {
-        $siswa = Auth::user()->siswa;
-        
-        $poin = PoinSiswa::with('creator')
-            ->where('siswa_id', $siswa->id)
-            ->orderBy('tanggal', 'desc')
-            ->get();
-        
-        // Calculate total poin
-        $totalPoin = $poin->sum('poin');
-        $totalPrestasi = $poin->where('jenis', 'Prestasi')->sum('poin');
-        $totalPelanggaran = $poin->where('jenis', 'Pelanggaran')->sum('poin');
-        
-        return view('pages.siswa.poin.index', compact('poin', 'totalPoin', 'totalPrestasi', 'totalPelanggaran'));
-    }
+{
+    $siswa = Auth::user()->siswa;
 
-    // Orangtua Methods
+    $poin = PoinSiswa::with('creator')
+        ->where('siswa_id', $siswa->id)
+        ->orderBy('tanggal', 'desc')
+        ->get();
+
+    $totalPoin        = $poin->sum('poin');
+    $totalPrestasi    = $poin->where('jenis', 'Prestasi')->sum('poin');
+    $totalPelanggaran = $poin->where('jenis', 'Pelanggaran')->sum('poin');
+
+    // Rule-based: ambil threshold PER SISWA
+    $threshold = ThresholdPoinSiswa::where('siswa_id', $siswa->id)->first()
+                 ?? ThresholdPoinSiswa::getDefault();
+    $status = $threshold->getStatus($totalPoin);
+
+    // Persentase progress bar (skala ke sangat_baik)
+    $maxPoin    = $threshold->sangat_baik > 0 ? $threshold->sangat_baik : 1;
+    $persenPoin = max(0, min(100, round(($totalPoin / $maxPoin) * 100)));
+
+    return view('pages.siswa.poin.index', compact(
+        'poin', 'totalPoin', 'totalPrestasi', 'totalPelanggaran', 'status', 'threshold', 'persenPoin'
+    ));
+}
+
+    // ==================== ORANGTUA ====================
+
     public function orangtuaIndex()
     {
         $orangtua = Auth::user()->orangtua;
-        $siswa = $orangtua->siswas;
-        
-        // Get poin for all children
+        $siswa    = $orangtua->siswas;
+
         $poin = PoinSiswa::with(['siswa', 'creator'])
             ->whereIn('siswa_id', $siswa->pluck('id'))
             ->orderBy('tanggal', 'desc')
             ->get();
-        
-        // Calculate totals per child
+
+        // Rule-based: hitung status per anak
         $totals = [];
         foreach ($siswa as $s) {
+            $totalPoin = $poin->where('siswa_id', $s->id)->sum('poin');
+            $threshold = ThresholdPoin::where('kelas_id', $s->kelas_id)->first()
+                         ?? ThresholdPoin::getDefault();
+
             $totals[$s->id] = [
-                'nama' => $s->nama,
-                'total' => $poin->where('siswa_id', $s->id)->sum('poin'),
-                'prestasi' => $poin->where('siswa_id', $s->id)->where('jenis', 'Prestasi')->sum('poin'),
+                'nama'        => $s->nama,
+                'total'       => $totalPoin,
+                'prestasi'    => $poin->where('siswa_id', $s->id)->where('jenis', 'Prestasi')->sum('poin'),
                 'pelanggaran' => $poin->where('siswa_id', $s->id)->where('jenis', 'Pelanggaran')->sum('poin'),
+                'status'      => $threshold->getStatus($totalPoin),
             ];
         }
-        
+
         return view('pages.orangtua.poin.index', compact('poin', 'siswa', 'totals'));
     }
 }

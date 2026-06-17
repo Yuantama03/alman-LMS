@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ChatMessage extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['mapel_id', 'user_id', 'message'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function mapel()
+    {
+        return $this->belongsTo(Mapel::class);
+    }
+}

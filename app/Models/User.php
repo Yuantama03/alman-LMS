@@ -12,11 +12,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -26,32 +21,31 @@ class User extends Authenticatable
         'nip'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function guru($id) {
-        $guru = Guru::where('nip', $id)->first();
-        return $guru;
+    public function guru($id = null) {
+        if ($id) {
+            return Guru::where('nip', $id)->first();
+        }
+        return $this->hasOne(Guru::class, 'user_id');
     }
 
-    public function siswa($id) {
-        $siswa = Siswa::where('nis', $id)->first();
-        return $siswa;
+    public function siswa($id = null) {
+        if ($id) {
+            return Siswa::where('nis', $id)->first();
+        }
+        return $this->hasOne(Siswa::class, 'user_id');
+    }
+
+    public function orangtua()
+    {
+        return $this->hasOne(Orangtua::class, 'user_id');
     }
 }

@@ -2,17 +2,22 @@
 
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ThresholdPoinController;
 use App\Http\Controllers\JadwalController;
 // use App\Http\Controllers\JurusanController; // Removed for SMP
 use App\Http\Controllers\KalenderAkademikController;
+use App\Http\Controllers\ChatGroupController;
+use App\Http\Controllers\VideoPembelajaranController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\ThresholdPoinSiswaController;
 use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\PengumumanSekolahController;
 use App\Http\Controllers\PoinSiswaController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\SemesterController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SilabusController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\TugasController;
@@ -44,11 +49,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/update-profile', [UserController::class, 'update'])->name('update.profile');
     Route::get('/edit-password', [UserController::class, 'editPassword'])->name('ubah-password');
     Route::patch('/update-password', [UserController::class, 'updatePassword'])->name('update-password');
+
+     // Chat Kelompok — semua role bisa akses
+    Route::get('/chat/group', [ChatGroupController::class, 'index'])->name('chat.group.index');
+    Route::get('/chat/group/create', [ChatGroupController::class, 'create'])->name('chat.group.create');
+    Route::post('/chat/group', [ChatGroupController::class, 'store'])->name('chat.group.store');
+    Route::get('/chat/group/{groupId}', [ChatGroupController::class, 'show'])->name('chat.group.show');
+    Route::post('/chat/group/{groupId}/send', [ChatGroupController::class, 'send'])->name('chat.group.send');
+    Route::post('/chat/group/{groupId}/add-member', [ChatGroupController::class, 'addMember'])->name('chat.group.addMember');
+    Route::post('/chat/group/{groupId}/remove-member', [ChatGroupController::class, 'removeMember'])->name('chat.group.removeMember');
+    Route::delete('/chat/group/{groupId}', [ChatGroupController::class, 'destroy'])->name('chat.group.destroy');
 });
 
 Route::group(['middleware' => ['auth', 'checkRole:guru']], function () {
     Route::get('/guru/dashboard', [HomeController::class, 'guru'])->name('guru.dashboard');
     Route::resource('materi', MateriController::class);
+    Route::get('/chat/{mapelId}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/{mapelId}/send', [ChatController::class, 'send'])->name('chat.send');
     Route::resource('tugas', TugasController::class);
     Route::get('/jawaban-download/{id}', [TugasController::class, 'downloadJawaban'])->name('guru.jawaban.download');
     Route::put('/tugas/nilai/{id}', [TugasController::class, 'inputNilai'])->name('guru.tugas.nilai');
@@ -57,10 +74,31 @@ Route::group(['middleware' => ['auth', 'checkRole:guru']], function () {
     Route::post('/guru/presensi/store', [PresensiController::class, 'guruStore'])->name('guru.presensi.store');
     Route::get('/guru/poin', [PoinSiswaController::class, 'guruIndex'])->name('guru.poin.index');
     Route::get('/guru/poin/create', [PoinSiswaController::class, 'guruCreate'])->name('guru.poin.create');
+    Route::delete('/guru/poin/{id}', [PoinSiswaController::class, 'guruDestroy'])->name('guru.poin.destroy');
+    // Threshold Per Siswa
+Route::get('/guru/threshold-siswa', [ThresholdPoinSiswaController::class, 'index'])->name('guru.threshold.siswa.index');
+Route::get('/guru/threshold-siswa/{siswaId}/edit', [ThresholdPoinSiswaController::class, 'edit'])->name('guru.threshold.siswa.edit');
+Route::put('/guru/threshold-siswa/{siswaId}', [ThresholdPoinSiswaController::class, 'update'])->name('guru.threshold.siswa.update');
+Route::delete('/guru/threshold-siswa/{siswaId}/reset', [ThresholdPoinSiswaController::class, 'reset'])->name('guru.threshold.siswa.reset');
     Route::post('/guru/poin/store', [PoinSiswaController::class, 'guruStore'])->name('guru.poin.store');
     Route::get('/guru/kalender', [KalenderAkademikController::class, 'index'])->name('guru.kalender.index');
+    // Video Pembelajaran
+    Route::get('/guru/video', [VideoPembelajaranController::class, 'guruIndex'])->name('guru.video.index');
+    Route::get('/guru/video/section/create', [VideoPembelajaranController::class, 'guruCreateSection'])->name('guru.video.section.create');
+    Route::post('/guru/video/section', [VideoPembelajaranController::class, 'guruStoreSection'])->name('guru.video.section.store');
+    Route::get('/guru/video/section/{id}/edit', [VideoPembelajaranController::class, 'guruEditSection'])->name('guru.video.section.edit');
+    Route::put('/guru/video/section/{id}', [VideoPembelajaranController::class, 'guruUpdateSection'])->name('guru.video.section.update');
+    Route::delete('/guru/video/section/{id}', [VideoPembelajaranController::class, 'guruDestroySection'])->name('guru.video.section.destroy');
+    Route::get('/guru/video/section/{sectionId}/video/create', [VideoPembelajaranController::class, 'guruCreateVideo'])->name('guru.video.create');
+    Route::post('/guru/video/section/{sectionId}/video', [VideoPembelajaranController::class, 'guruStoreVideo'])->name('guru.video.store');
+    Route::get('/guru/video/{id}/edit', [VideoPembelajaranController::class, 'guruEditVideo'])->name('guru.video.edit');
+    Route::put('/guru/video/{id}', [VideoPembelajaranController::class, 'guruUpdateVideo'])->name('guru.video.update');
+    Route::delete('/guru/video/{id}', [VideoPembelajaranController::class, 'guruDestroyVideo'])->name('guru.video.destroy');
 });
 Route::group(['middleware' => ['auth', 'checkRole:siswa']], function () {
+
+    Route::get('/chat/{mapelId}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/{mapelId}/send', [ChatController::class, 'send'])->name('chat.send');
     Route::get('/siswa/dashboard', [HomeController::class, 'siswa'])->name('siswa.dashboard');
     Route::get('/siswa/materi', [MateriController::class, 'siswa'])->name('siswa.materi');
     Route::get('/materi-download/{id}', [MateriController::class, 'download'])->name('siswa.materi.download');
@@ -70,6 +108,8 @@ Route::group(['middleware' => ['auth', 'checkRole:siswa']], function () {
     Route::get('/siswa/presensi', [PresensiController::class, 'siswaIndex'])->name('siswa.presensi.index');
     Route::get('/siswa/poin', [PoinSiswaController::class, 'siswaIndex'])->name('siswa.poin.index');
     Route::get('/siswa/kalender', [KalenderAkademikController::class, 'index'])->name('siswa.kalender.index');
+Route::get('/siswa/video', [VideoPembelajaranController::class, 'siswaIndex'])->name('siswa.video.index');
+Route::get('/siswa/video/{videoId}', [VideoPembelajaranController::class, 'siswaPlay'])->name('siswa.video.play');
 });
 Route::group(['middleware' => ['auth', 'checkRole:orangtua']], function () {
     Route::get('/orangtua/dashboard', [HomeController::class, 'orangtua'])->name('orangtua.dashboard');
@@ -83,6 +123,11 @@ Route::group(['middleware' => ['auth', 'checkRole:admin']], function () {
     // Route::resource('jurusan', JurusanController::class); // Removed for SMP
     Route::resource('mapel', MapelController::class);
     Route::resource('guru', GuruController::class);
+    // Threshold Per Siswa
+Route::get('/admin/threshold-siswa', [ThresholdPoinSiswaController::class, 'index'])->name('admin.threshold.siswa.index');
+Route::get('/admin/threshold-siswa/{siswaId}/edit', [ThresholdPoinSiswaController::class, 'edit'])->name('admin.threshold.siswa.edit');
+Route::put('/admin/threshold-siswa/{siswaId}', [ThresholdPoinSiswaController::class, 'update'])->name('admin.threshold.siswa.update');
+Route::delete('/admin/threshold-siswa/{siswaId}/reset', [ThresholdPoinSiswaController::class, 'reset'])->name('admin.threshold.siswa.reset');
     Route::resource('kelas', KelasController::class);
     Route::resource('siswa', SiswaController::class);
     Route::resource('user', UserController::class);
@@ -107,4 +152,10 @@ Route::group(['middleware' => ['auth', 'checkRole:admin']], function () {
     Route::get('/admin/kalender/{id}/edit', [KalenderAkademikController::class, 'adminEdit'])->name('admin.kalender.edit');
     Route::put('/admin/kalender/{id}', [KalenderAkademikController::class, 'adminUpdate'])->name('admin.kalender.update');
     Route::delete('/admin/kalender/{id}', [KalenderAkademikController::class, 'adminDestroy'])->name('admin.kalender.destroy');
+
+    // Threshold Poin
+    Route::get('/admin/threshold', [ThresholdPoinController::class, 'index'])->name('admin.threshold.index');
+    Route::get('/admin/threshold/{kelasId}/edit', [ThresholdPoinController::class, 'edit'])->name('admin.threshold.edit');
+    Route::put('/admin/threshold/{kelasId}', [ThresholdPoinController::class, 'update'])->name('admin.threshold.update');
+    
 });

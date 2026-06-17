@@ -25,9 +25,11 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
- public function boot()
-    {
+public function boot()
+{
+    if (Schema::hasTable('pengaturans')) {
         $pengaturan = Pengaturan::first();
         View::share('pengaturan', $pengaturan);
     }
 }
+};

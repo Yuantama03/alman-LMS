@@ -248,7 +248,57 @@ class HomeController extends Controller
         $jadwal = Jadwal::where('kelas_id', $kelas->id)->get();
         $hari = Carbon::now()->locale('id')->isoFormat('dddd');
         $pengumumans = PengumumanSekolah::active()->get();
-        return view('pages.siswa.dashboard', compact('materi', 'siswa', 'kelas', 'tugas', 'jadwal', 'hari', 'pengumumans'));
+
+        // Content Recommendation: mapel dengan nilai rata-rata < KKM
+        $KKM = 75;
+
+        $jawabanSiswa = \App\Models\Jawaban::with('tugas.guru.mapel')
+            ->where('siswa_id', $siswa->id)
+            ->whereNotNull('nilai')
+            ->get();
+
+        $rekomendasiMapel = $jawabanSiswa
+            ->filter(function ($j) {
+                return $j->tugas && $j->tugas->guru && $j->tugas->guru->mapel;
+            })
+            ->groupBy(function ($j) {
+                return $j->tugas->guru->mapel->id;
+            })
+            ->map(function ($items) {
+                $mapel = $items->first()->tugas->guru->mapel;
+                return [
+                    'mapel_id'     => $mapel->id,
+                    'nama_mapel'   => $mapel->nama_mapel,
+                    'rata_rata'    => round($items->avg('nilai'), 1),
+                    'jumlah_nilai' => $items->count(),
+                ];
+            })
+            ->filter(function ($item) use ($KKM) {
+                return $item['rata_rata'] < $KKM;
+            })
+            ->sortBy('rata_rata')
+            ->values();
+
+        // Cek video pembelajaran tersedia untuk mapel yang direkomendasikan
+        // Cek video pembelajaran tersedia untuk mapel yang direkomendasikan
+$rekomendasiMapel = $rekomendasiMapel->map(function ($rekom) {
+    $videoSection = \App\Models\VideoSection::where('mapel_id', $rekom['mapel_id'])->first();
+    $rekom['video_section_id'] = $videoSection?->id;
+    return $rekom;
+});
+
+
+        // Indikator Poin untuk dashboard
+$totalPoin = \App\Models\PoinSiswa::where('siswa_id', $siswa->id)->sum('poin');
+$thresholdPoin = \App\Models\ThresholdPoinSiswa::where('siswa_id', $siswa->id)->first()
+                 ?? \App\Models\ThresholdPoinSiswa::getDefault();
+$statusPoin = $thresholdPoin->getStatus($totalPoin);
+
+// Hitung persentase untuk progress bar (skala 0-100)
+$maxPoin = $thresholdPoin->sangat_baik;
+$persenPoin = $maxPoin > 0 ? min(100, round(($totalPoin / $maxPoin) * 100)) : 0;
+
+        return view('pages.siswa.dashboard', compact('materi', 'siswa', 'kelas', 'tugas', 'jadwal', 'hari', 'pengumumans', 'rekomendasiMapel', 'totalPoin', 'thresholdPoin', 'statusPoin', 'persenPoin'));
     }
 
     public function orangtua()

@@ -6,11 +6,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
         $this->call(JurusanSeeder::class);
@@ -22,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(SemesterSeeder::class);
         $this->call(PengaturanSeeder::class);
+        $this->call(ThresholdPoinSeeder::class);
     }
 }
