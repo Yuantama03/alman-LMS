@@ -28,6 +28,24 @@ class VideoPembelajaran extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+        public function comments()
+    {
+        return $this->hasMany(VideoComment::class)
+            ->whereNull('parent_id')
+            ->with(['user', 'replies'])
+            ->orderByDesc('created_at');
+    }
+
+    public function allComments()
+    {
+        return $this->hasMany(VideoComment::class);
+    }
+
+    public function views()
+    {
+        return $this->hasMany(VideoView::class);
+    }
+
     /**
      * Convert YouTube URL ke embed URL
      * Support: youtu.be/xxx, youtube.com/watch?v=xxx

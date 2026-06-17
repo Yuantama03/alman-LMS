@@ -6,6 +6,9 @@ use App\Models\Mapel;
 use App\Models\VideoSection;
 use App\Models\VideoPembelajaran;
 use Illuminate\Http\Request;
+use App\Models\VideoComment;
+use App\Models\VideoView;
+use App\Models\VideoSearch;
 use Illuminate\Support\Facades\Auth;
 
 class VideoPembelajaranController extends Controller
@@ -183,31 +186,140 @@ class VideoPembelajaranController extends Controller
             ->with('success', 'Video berhasil dihapus');
     }
 
+
+        public function guruShowDiskusi($id)
+    {
+        $video = VideoPembelajaran::with([
+            'section.mapel',
+            'comments.user',
+            'comments.replies.user',
+        ])->findOrFail($id);
+
+        return view('pages.guru.video.diskusi', compact('video'));
+    }
     // ==================== SISWA ====================
 
     /**
      * Halaman video pembelajaran siswa
      */
-    public function siswaIndex()
+       public function siswaIndex(Request $request)
     {
-        $sections = VideoSection::with(['videos', 'mapel'])
-            ->orderBy('urutan')
-            ->get();
+        $keyword = trim((string) $request->query('q', ''));
 
-        // Video pertama sebagai default
+        $sectionsQuery = VideoSection::with(['videos', 'mapel'])->orderBy('urutan');
+
+        if ($keyword !== '') {
+            $sectionsQuery->where(function ($q) use ($keyword) {
+                $q->where('judul', 'like', "%{$keyword}%")
+                    ->orWhereHas('videos', fn ($v) => $v->where('judul', 'like', "%{$keyword}%"))
+                    ->orWhereHas('mapel', fn ($m) => $m->where('nama_mapel', 'like', "%{$keyword}%"));
+            });
+        }
+
+        $sections = $sectionsQuery->get();
+
+        if ($keyword !== '') {
+            $mapelId = optional($sections->first()?->mapel)->id;
+            VideoSearch::create([
+                'user_id'  => Auth::id(),
+                'mapel_id' => $mapelId,
+                'keyword'  => $keyword,
+            ]);
+        }
+
         $activeVideo = $sections->first()?->videos->first();
+        $recommended = $this->buildRecommendations($activeVideo);
 
-        return view('pages.siswa.video.index', compact('sections', 'activeVideo'));
+        return view('pages.siswa.video.index', compact('sections', 'activeVideo', 'recommended', 'keyword'));
     }
 
-    /**
-     * Play video tertentu
-     */
     public function siswaPlay($videoId)
     {
         $sections    = VideoSection::with(['videos', 'mapel'])->orderBy('urutan')->get();
-        $activeVideo = VideoPembelajaran::findOrFail($videoId);
+        $activeVideo = VideoPembelajaran::with(['section.mapel', 'comments.replies.user', 'comments.user'])
+            ->findOrFail($videoId);
 
-        return view('pages.siswa.video.index', compact('sections', 'activeVideo'));
+        $view = VideoView::firstOrNew([
+            'video_pembelajaran_id' => $activeVideo->id,
+            'user_id'               => Auth::id(),
+        ]);
+        $view->jumlah_tonton = ($view->jumlah_tonton ?? 0) + 1;
+        $view->save();
+
+        $recommended = $this->buildRecommendations($activeVideo);
+
+        return view('pages.siswa.video.index', compact('sections', 'activeVideo', 'recommended'));
+    }
+
+    private function buildRecommendations(?VideoPembelajaran $activeVideo)
+    {
+        $userId = Auth::id();
+
+        $watchedMapelIds = VideoView::where('user_id', $userId)
+            ->with('video.section')
+            ->get()
+            ->pluck('video.section.mapel_id')
+            ->filter()
+            ->values();
+
+        $searchedMapelIds = VideoSearch::where('user_id', $userId)
+            ->whereNotNull('mapel_id')
+            ->pluck('mapel_id');
+
+        $activeMapelId = optional(optional($activeVideo)->section)->mapel_id;
+
+        $mapelIds = collect([$activeMapelId])
+            ->merge($watchedMapelIds)
+            ->merge($searchedMapelIds)
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($mapelIds->isEmpty()) {
+            return collect();
+        }
+
+        return VideoPembelajaran::with('section.mapel')
+            ->whereHas('section', fn ($s) => $s->whereIn('mapel_id', $mapelIds))
+            ->when($activeVideo, fn ($q) => $q->where('id', '!=', $activeVideo->id))
+            ->withCount('views')
+            ->orderByDesc('views_count')
+            ->take(6)
+            ->get();
+    }
+
+    public function storeComment(Request $request, $videoId)
+    {
+        $request->validate([
+            'isi'       => 'required|string|max:2000',
+            'parent_id' => 'nullable|exists:video_comments,id',
+        ]);
+
+        $video = VideoPembelajaran::findOrFail($videoId);
+
+        VideoComment::create([
+            'video_pembelajaran_id' => $video->id,
+            'user_id'               => Auth::id(),
+            'parent_id'             => $request->parent_id,
+            'isi'                   => $request->isi,
+        ]);
+
+        return back()->with('success', 'Komentar berhasil dikirim');
+    }
+
+    public function destroyComment($commentId)
+    {
+        $comment = VideoComment::findOrFail($commentId);
+        $user    = Auth::user();
+
+        $isGuru = $user->roles === 'guru';
+
+        if (! $isGuru && $comment->user_id !== $user->id) {
+            abort(403, 'Tidak diizinkan menghapus komentar ini.');
+        }
+
+        $comment->delete();
+
+        return back()->with('success', 'Komentar berhasil dihapus');
     }
 }

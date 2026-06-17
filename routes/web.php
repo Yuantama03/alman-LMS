@@ -49,6 +49,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/update-profile', [UserController::class, 'update'])->name('update.profile');
     Route::get('/edit-password', [UserController::class, 'editPassword'])->name('ubah-password');
     Route::patch('/update-password', [UserController::class, 'updatePassword'])->name('update-password');
+        // Diskusi / Komentar Video — guru & siswa bisa akses
+    Route::post('/video/{videoId}/komentar', [VideoPembelajaranController::class, 'storeComment'])->name('video.komentar.store');
+    Route::delete('/video/komentar/{commentId}', [VideoPembelajaranController::class, 'destroyComment'])->name('video.komentar.destroy');
 
      // Chat Kelompok — semua role bisa akses
     Route::get('/chat/group', [ChatGroupController::class, 'index'])->name('chat.group.index');
@@ -70,6 +73,7 @@ Route::group(['middleware' => ['auth', 'checkRole:guru']], function () {
     Route::get('/jawaban-download/{id}', [TugasController::class, 'downloadJawaban'])->name('guru.jawaban.download');
     Route::put('/tugas/nilai/{id}', [TugasController::class, 'inputNilai'])->name('guru.tugas.nilai');
     Route::get('/guru/presensi', [PresensiController::class, 'guruIndex'])->name('guru.presensi.index');
+        Route::get('/guru/video/{id}/diskusi', [VideoPembelajaranController::class, 'guruShowDiskusi'])->name('guru.video.diskusi');
     Route::get('/guru/presensi/create', [PresensiController::class, 'guruCreate'])->name('guru.presensi.create');
     Route::post('/guru/presensi/store', [PresensiController::class, 'guruStore'])->name('guru.presensi.store');
     Route::get('/guru/poin', [PoinSiswaController::class, 'guruIndex'])->name('guru.poin.index');

@@ -27,8 +27,7 @@
                         @else
                             @foreach($sections as $section)
                             <div class="card border mb-3">
-                                <div class="card-header d-flex justify-content-between align-items-center"
-                                     style="background:#f8f9fa;">
+                                <div class="card-header d-flex justify-content-between align-items-center" style="background:#f8f9fa;">
                                     <div>
                                         <h5 class="mb-0">{{ $section->judul }}</h5>
                                         <small class="text-muted">
@@ -38,24 +37,21 @@
                                         </small>
                                     </div>
                                     <div>
-                                        <a href="{{ route('guru.video.create', $section->id) }}"
-                                           class="btn btn-success btn-sm">
+                                        <a href="{{ route('guru.video.create', $section->id) }}" class="btn btn-success btn-sm">
                                             <i class="fas fa-plus"></i> Tambah Video
                                         </a>
-                                        <a href="{{ route('guru.video.section.edit', $section->id) }}"
-                                           class="btn btn-warning btn-sm ml-1">
+                                        <a href="{{ route('guru.video.section.edit', $section->id) }}" class="btn btn-warning btn-sm ml-1">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('guru.video.section.destroy', $section->id) }}"
-                                              method="POST" class="d-inline">
+                                        <form action="{{ route('guru.video.section.destroy', $section->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Hapus section dan semua videonya?')">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus section dan semua videonya?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
                                     </div>
                                 </div>
+
                                 @if($section->videos->isNotEmpty())
                                 <div class="card-body p-0">
                                     <table class="table table-hover mb-0">
@@ -75,21 +71,22 @@
                                                 <td>{{ $video->judul }}</td>
                                                 <td>{{ $video->durasi ?? '-' }}</td>
                                                 <td>
-                                                    <a href="{{ $video->youtube_url }}" target="_blank"
-                                                       class="text-primary">
+                                                    <a href="{{ $video->youtube_url }}" target="_blank" class="text-primary">
                                                         <i class="fab fa-youtube"></i> Lihat
                                                     </a>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="{{ route('guru.video.edit', $video->id) }}"
-                                                       class="btn btn-warning btn-sm">
+                                                    {{-- TOMBOL DISKUSI DIPINDAH KE SINI AGAR BERFUNGSI PER VIDEO --}}
+                                                    <a href="{{ route('guru.video.diskusi', $video->id) }}" class="btn btn-info btn-sm" title="Diskusi">
+                                                        <i class="fas fa-comments"></i> Forum Diskusi
+                                                    </a>
+                                                    
+                                                    <a href="{{ route('guru.video.edit', $video->id) }}" class="btn btn-warning btn-sm ml-1">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('guru.video.destroy', $video->id) }}"
-                                                          method="POST" class="d-inline">
+                                                    <form action="{{ route('guru.video.destroy', $video->id) }}" method="POST" class="d-inline">
                                                         @csrf @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Hapus video ini?')">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus video ini?')">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
