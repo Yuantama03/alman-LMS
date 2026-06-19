@@ -9,6 +9,7 @@ use App\Models\Mapel;
 use App\Models\Materi;
 use App\Models\Orangtua;
 use App\Models\PengumumanSekolah;
+use App\Helpers\EarlyWarningHelper;
 use App\Models\Siswa;
 use App\Models\Tugas;
 use Carbon\Carbon;
@@ -257,6 +258,16 @@ class HomeController extends Controller
             ->whereNotNull('nilai')
             ->get();
 
+            // Get total poin negatif siswa
+        $totalPoinNegatif = $siswa->getTotalPoinNegatif();
+        
+        // Get early warning status
+        $statusEarlyWarning = \App\Helpers\EarlyWarningHelper::getStatus($totalPoinNegatif);
+        $persenPoinWarning = min(($totalPoinNegatif / 100) * 100, 100); // Max 100%
+        
+        // Get SP aktif
+        $spAktif = $siswa->getSpAktif();
+
         $rekomendasiMapel = $jawabanSiswa
             ->filter(function ($j) {
                 return $j->tugas && $j->tugas->guru && $j->tugas->guru->mapel;
@@ -298,7 +309,7 @@ $statusPoin = $thresholdPoin->getStatus($totalPoin);
 $maxPoin = $thresholdPoin->sangat_baik;
 $persenPoin = $maxPoin > 0 ? min(100, round(($totalPoin / $maxPoin) * 100)) : 0;
 
-        return view('pages.siswa.dashboard', compact('materi', 'siswa', 'kelas', 'tugas', 'jadwal', 'hari', 'pengumumans', 'rekomendasiMapel', 'totalPoin', 'thresholdPoin', 'statusPoin', 'persenPoin'));
+        return view('pages.siswa.dashboard', compact('materi', 'siswa', 'kelas', 'tugas', 'jadwal', 'hari', 'pengumumans', 'rekomendasiMapel', 'totalPoin', 'thresholdPoin', 'statusPoin', 'persenPoin', 'totalPoinNegatif', 'statusEarlyWarning', 'persenPoinWarning', 'spAktif'));
     }
 
     public function orangtua()

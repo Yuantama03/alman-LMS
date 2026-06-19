@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Pengaturan;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Models\PoinSiswa;
+use App\Observers\PoinSiswaObserver;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
@@ -31,5 +33,6 @@ public function boot()
         $pengaturan = Pengaturan::first();
         View::share('pengaturan', $pengaturan);
     }
+    PoinSiswa::observe(PoinSiswaObserver::class);
 }
 };

@@ -79,12 +79,15 @@ class SiswaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        $id = Crypt::decrypt($id);
-        $siswa = Siswa::findOrFail($id);
+{
+    $id = Crypt::decrypt($id);
+    $siswa = Siswa::findOrFail($id);
+    
+    // Ambil SP siswa
+    $spList = $siswa->getSpAktif();
 
-        return view('pages.admin.siswa.profile', compact('siswa'));
-    }
+    return view('pages.admin.siswa.profile', compact('siswa', 'spList'));
+}
 
     /**
      * Show the form for editing the specified resource.

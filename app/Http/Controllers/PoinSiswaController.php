@@ -204,7 +204,7 @@ class PoinSiswaController extends Controller
 
     // ==================== SISWA ====================
 
-    public function siswaIndex()
+   public function siswaIndex()
 {
     $siswa = Auth::user()->siswa;
 
@@ -226,8 +226,17 @@ class PoinSiswaController extends Controller
     $maxPoin    = $threshold->sangat_baik > 0 ? $threshold->sangat_baik : 1;
     $persenPoin = max(0, min(100, round(($totalPoin / $maxPoin) * 100)));
 
+            // ========== EARLY WARNING UNTUK POIN PELANGGARAN ==========
+        $totalPoinPelanggaran = abs($totalPelanggaran); // Konversi ke positif
+        $earlyWarningStatus = \App\Helpers\EarlyWarningHelper::getStatus($totalPoinPelanggaran);
+
+    // ========== EARLY WARNING UNTUK POIN PELANGGARAN ==========
+    $totalPoinPelanggaran = abs($totalPelanggaran); // Konversi ke positif
+    $earlyWarningStatus = \App\Helpers\EarlyWarningHelper::getStatus($totalPoinPelanggaran);
+
     return view('pages.siswa.poin.index', compact(
-        'poin', 'totalPoin', 'totalPrestasi', 'totalPelanggaran', 'status', 'threshold', 'persenPoin'
+        'poin', 'totalPoin', 'totalPrestasi', 'totalPelanggaran', 'status', 'threshold', 'persenPoin', 
+        'totalPoinPelanggaran', 'earlyWarningStatus'
     ));
 }
 

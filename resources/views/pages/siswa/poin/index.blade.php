@@ -101,6 +101,57 @@
                 </div>
             </div>
 
+
+                {{-- Early Warning (Poin Pelanggaran) --}}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center mr-3"
+                                         style="width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,0.04);font-size:28px;">
+                                        {{ $earlyWarningStatus['icon'] }}
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Status Pelanggaran Kamu</h5>
+                                        <small class="text-muted">Total Pelanggaran: <strong>{{ $totalPoinPelanggaran }}</strong></small>
+                                    </div>
+                                </div>
+                                <span class="badge badge-{{ $earlyWarningStatus['bootstrap_class'] }}" style="font-size:14px;padding:8px 18px;">
+                                    {{ $earlyWarningStatus['label'] }}
+                                </span>
+                            </div>
+
+                            {{-- Progress Bar Pelanggaran --}}
+                            <div class="progress" style="height:10px;border-radius:10px;">
+                                <div class="progress-bar bg-{{ $earlyWarningStatus['bootstrap_class'] }}"
+                                     role="progressbar" style="width: {{ min(($totalPoinPelanggaran / 100) * 100, 100) }}%; border-radius:10px;"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <small class="text-muted">0</small>
+                                <small class="text-muted">25</small>
+                                <small class="text-muted">50</small>
+                                <small class="text-muted">75</small>
+                                <small class="text-muted">100</small>
+                            </div>
+
+                            {{-- Early Warning Legend --}}
+                            <hr>
+                            <small class="text-muted d-block mb-2">Kategori Early Warning Pelanggaran:</small>
+                            <div class="d-flex flex-wrap" style="gap:8px;">
+                                <span class="badge badge-success" style="padding:6px 12px;">🟢 HIJAU (0-24) - Baik</span>
+                                <span class="badge badge-warning" style="padding:6px 12px;">🟡 KUNING (25-49) - Waspada</span>
+                                <span class="badge badge-danger" style="padding:6px 12px;">🟠 ORANGE (50-74) - Pembinaan (SP 1)</span>
+                                <span class="badge badge-danger" style="padding:6px 12px;">🔴 MERAH (75-99) - Pembinaan Intensif (SP 2)</span>
+                                <span class="badge badge-dark" style="padding:6px 12px;">⚫ HITAM (100) - Pengembalian Siswa (SP 3)</span>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Riwayat Poin --}}
             <div class="row">
                 <div class="col-12">
