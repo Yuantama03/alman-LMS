@@ -32,11 +32,9 @@ class Siswa extends Model
     }
 
     public function thresholdPoin()
-{
-    return $this->hasOne(ThresholdPoinSiswa::class);
-}
-
-    // Tambahkan method ini di dalam class Siswa
+    {
+        return $this->hasOne(ThresholdPoinSiswa::class);
+    }
 
     public function spSiswa()
     {
@@ -44,12 +42,6 @@ class Siswa extends Model
     }
 
     /**
-     * Get total poin negatif siswa
-     */
-       /**
-     * Get total poin negatif siswa
-     */
-        /**
      * Get total poin negatif siswa (dari pelanggaran)
      */
     public function getTotalPoinNegatif()
@@ -58,7 +50,6 @@ class Siswa extends Model
             ->where('jenis', 'Pelanggaran')
             ->sum('poin');
         
-        // Total poin pelanggaran sudah negatif, ambil absolutnya
         return abs($total);
     }
 
@@ -71,27 +62,19 @@ class Siswa extends Model
     }
 
     /**
-     * Check dan create SP otomatis berdasarkan poin
-     */
-        /**
-     * Check dan create SP otomatis berdasarkan poin
-     * Juga handle revoke SP jika poin berkurang
-     */
-        /**
      * Check dan create SP otomatis berdasarkan poin (Progressive)
-     * SP harus lewat 1 → 2 → 3, tidak boleh skip
+     * SP 1: poin >= 50
+     * SP 2: poin >= 75
+     * SP 3: poin >= 100
      */
     public function checkAndCreateSp()
     {
         $totalPoinNegatif = $this->getTotalPoinNegatif();
         
-        // Cek SP terakhir yang aktif
         $activeSp = $this->spSiswa()->aktif()->first();
         $currentSpLevel = $activeSp ? (int)filter_var($activeSp->level_sp, FILTER_SANITIZE_NUMBER_INT) : 0;
 
-        // ========== REVOKE SP JIKA POIN TURUN ==========
-        
-        // Turun dari SP 3 ke SP 2 jika poin < 100
+        // REVOKE SP jika poin turun
         if ($totalPoinNegatif < 100 && $currentSpLevel == 3) {
             $sp3 = $this->spSiswa()->where('level_sp', 'SP 3')->aktif()->first();
             if ($sp3) {
@@ -103,7 +86,6 @@ class Siswa extends Model
             $currentSpLevel = 2;
         }
 
-        // Turun dari SP 2 ke SP 1 jika poin < 75
         if ($totalPoinNegatif < 75 && $currentSpLevel == 2) {
             $sp2 = $this->spSiswa()->where('level_sp', 'SP 2')->aktif()->first();
             if ($sp2) {
@@ -115,7 +97,6 @@ class Siswa extends Model
             $currentSpLevel = 1;
         }
 
-        // Revoke SP 1 jika poin < 50
         if ($totalPoinNegatif < 50 && $currentSpLevel >= 1) {
             $sp1 = $this->spSiswa()->where('level_sp', 'SP 1')->aktif()->first();
             if ($sp1) {
@@ -127,9 +108,7 @@ class Siswa extends Model
             return 'Revoked SP 1';
         }
 
-        // ========== CREATE/UPGRADE SP JIKA POIN NAIK ==========
-
-        // Upgrade ke SP 3 dari SP 2 jika poin >= 100
+        // CREATE/UPGRADE SP jika poin naik
         if ($totalPoinNegatif >= 100 && $currentSpLevel == 2) {
             $sp2 = $this->spSiswa()->where('level_sp', 'SP 2')->aktif()->first();
             if ($sp2) {
@@ -138,11 +117,10 @@ class Siswa extends Model
                     'tanggal_release' => now()->toDateString()
                 ]);
             }
-            $this->createOrUpdateSp('SP 3', $totalPoinNegatif, 'Upgrade dari SP 2 - Akumulasi poin negatif mencapai 100');
+            $this->createOrUpdateSp('SP 3', $totalPoinNegatif, 'Upgrade dari SP 2 - Poin mencapai 100');
             return 'SP 3';
         }
 
-        // Upgrade ke SP 2 dari SP 1 jika poin >= 75
         if ($totalPoinNegatif >= 75 && $currentSpLevel == 1) {
             $sp1 = $this->spSiswa()->where('level_sp', 'SP 1')->aktif()->first();
             if ($sp1) {
@@ -151,17 +129,16 @@ class Siswa extends Model
                     'tanggal_release' => now()->toDateString()
                 ]);
             }
-            $this->createOrUpdateSp('SP 2', $totalPoinNegatif, 'Upgrade dari SP 1 - Akumulasi poin negatif mencapai 75');
+            $this->createOrUpdateSp('SP 2', $totalPoinNegatif, 'Upgrade dari SP 1 - Poin mencapai 75');
             return 'SP 2';
         }
 
-        // Create SP 1 jika poin >= 50 dan belum ada SP apapun
         if ($totalPoinNegatif >= 50 && $currentSpLevel == 0) {
-            $this->createOrUpdateSp('SP 1', $totalPoinNegatif, 'Akumulasi poin negatif mencapai 50');
+            $this->createOrUpdateSp('SP 1', $totalPoinNegatif, 'Poin mencapai 50');
             return 'SP 1';
         }
 
-        return null;    
+        return null;
     }
 
     /**
@@ -169,7 +146,6 @@ class Siswa extends Model
      */
     private function createOrUpdateSp($levelSp, $poinSaat, $alasan)
     {
-        // Cek apakah SP sudah ada
         $existingSp = $this->spSiswa()
             ->where('level_sp', $levelSp)
             ->where('status', 'Aktif')
@@ -187,8 +163,4 @@ class Siswa extends Model
             ]);
         }
     }
-
-    /**
-     * Create or update SP untuk siswa
-     */
 }

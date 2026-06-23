@@ -38,34 +38,44 @@
                         <p>{{ $siswa->alamat }}</p>
                     </div>
                 </div>
-                {{-- Indikator Poin --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <h5 class="mb-0">{{ $statusPoin['icon'] }} Status Poin Kamu</h5>
-                                <small class="text-muted">Total Poin: <strong>{{ $totalPoin }}</strong></small>
+                           <div class="row">
+                                       <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h5 class="mb-0">{{ $statusEarlyWarning['icon'] }} Status Pelanggaran Kamu</h5>
+                                    <small class="text-muted">Total Pelanggaran: <strong>{{ $totalPoinNegatif }}</strong></small>
+                                </div>
+                                <span class="badge badge-{{ $statusEarlyWarning['bootstrap_class'] }}" style="font-size:14px;padding:6px 14px;">
+                                    {{ $statusEarlyWarning['label'] }}
+                                </span>
                             </div>
-                            <span class="badge badge-{{ $statusPoin['color'] }}" style="font-size:14px;padding:6px 14px;">
-                                {{ $statusPoin['label'] }}
-                            </span>
-                        </div>
-                        <div class="progress" style="height:10px;">
-                            <div class="progress-bar bg-{{ $statusPoin['color'] }}"
-                                 role="progressbar" style="width: {{ $persenPoin }}%;"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-1">
-                            <small class="text-muted">0</small>
-                            <small class="text-muted">{{ $thresholdPoin->cukup }}</small>
-                            <small class="text-muted">{{ $thresholdPoin->baik }}</small>
-                            <small class="text-muted">{{ $thresholdPoin->sangat_baik }}</small>
+                            
+                            {{-- Progress Bar Container --}}
+                            <div style="box-sizing:border-box;width:100%;margin-bottom:20px;">
+                                {{-- Bar --}}
+                                <div style="position:relative;width:100%;height:14px;background:#e9ecef;border-radius:7px;overflow:hidden;box-sizing:border-box;">
+                                    <div style="position:absolute;left:0;top:0;height:100%;width:{{ ($totalPoinNegatif / 100) * 100 }}%;background:{{ $statusEarlyWarning['color'] == 'success' ? '#28a745' : ($statusEarlyWarning['color'] == 'warning' ? '#ffc107' : ($statusEarlyWarning['color'] == 'danger' ? '#dc3545' : '#343a40')) }};border-radius:7px;box-sizing:border-box;"></div>
+                                </div>
+                                
+                                {{-- Value Display --}}
+                                <div style="text-align:right;margin-top:6px;font-size:12px;font-weight:bold;">{{ $totalPoinNegatif }}/100</div>
+                                
+                                {{-- Scale Markers - PERFECT ALIGNMENT --}}
+                                <div style="display:flex;justify-content:space-between;font-size:11px;color:#999;margin-top:8px;width:100%;box-sizing:border-box;padding:0;">
+                                    <span style="flex:0 0 auto;text-align:left;">0</span>
+                                    <span style="flex:0 0 auto;text-align:center;transform:translateX(-50%);">50</span>
+                                    <span style="flex:0 0 auto;text-align:center;transform:translateX(-50%);">75</span>
+                                    <span style="flex:1;text-align:right;">100</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
             </div>
 
             {{-- Rekomendasi Belajar --}}
